@@ -1,0 +1,88 @@
+.hero {
+    background: linear-gradient(135deg, #1f1a15 0%, #3a2c1f 100%);
+    color: #fff;
+    padding: 96px 24px;
+    text-align: center;
+    border-radius: var(--radius-lg);
+    margin-bottom: 64px;
+  }
+  
+  .heroContent { max-width: 720px; margin: 0 auto; }
+  
+  .heroBadge {
+    display: inline-block;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-leather-light);
+    border: 1px solid var(--color-leather-light);
+    padding: 6px 16px;
+    margin-bottom: 24px;
+  }
+  
+  .heroTitle {
+    font-family: var(--font-serif);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.15;
+    margin-bottom: 20px;
+  }
+  .heroTitle em { font-style: italic; color: var(--color-leather-light); }
+  
+  .heroText { color: rgba(255, 255, 255, 0.75); font-size: 1.1rem; margin-bottom: 32px; }
+  
+  .heroCta {
+    display: inline-block;
+    padding: 14px 32px;
+    background: var(--color-leather-light);
+    color: var(--color-dark);
+    font-weight: 600;
+    letter-spacing: 0.05em;
+  }
+  .heroCta:hover { background: #fff; color: var(--color-dark); }
+  
+  .section { margin-bottom: 80px; }
+  
+  .sectionTitle {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+  
+  .categories {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+  }
+  
+  .categoryCard {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 32px 20px;
+    text-align: center;
+    font-family: var(--font-serif);
+    font-size: 1.1rem;
+    transition: all var(--transition);
+  }
+  .categoryCard:hover {
+    border-color: var(--color-leather);
+    color: var(--color-leather);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .advantages {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 32px;
+  }
+  .advantage h3 { margin-bottom: 8px; }
+  .advantage p { color: var(--color-text-muted); font-size: 0.95rem; }
+  
+  .placeholder {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-style: italic;
+    padding: 32px;
+    background: var(--color-surface);
+    border: 1px dashed var(--color-border);
+  }

@@ -1,0 +1,22 @@
+.card {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+  }
+  .image {
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+  .info { padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .line, .lineShort {
+    height: 14px;
+    background: #f0f0f0;
+    border-radius: 2px;
+  }
+  .lineShort { width: 60%; }
+  
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
