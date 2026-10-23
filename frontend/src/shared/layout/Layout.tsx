@@ -10,7 +10,7 @@ export const Layout = () => {
       <header className={styles.header}>
         <div className={styles.headerInner}>
           <Link to="/" className={styles.logo}>
-            <span className={styles.logoMain}>MANTICORE</span>
+            <span className={styles.logoMain}>ПОЛЕШУК</span>
             <span className={styles.logoTagline}>изделия из кожи</span>
           </Link>
 
@@ -38,7 +38,7 @@ export const Layout = () => {
       <footer className={styles.footer}>
         <div className={styles.footerInner}>
           <div>
-            <div className={styles.footerLogo}>MANTICORE</div>
+            <div className={styles.footerLogo}>ПОЛЕШУК</div>
             <p className={styles.footerText}>
               Изделия ручной работы из натуральной кожи.<br />
               Доставка по России и СНГ.
@@ -57,7 +57,7 @@ export const Layout = () => {
             <a href="https://t.me/manticore" target="_blank" rel="noreferrer">Telegram</a>
           </div>
         </div>
-        <div className={styles.copy}>© {new Date().getFullYear()} Manticore.shop</div>
+        <div className={styles.copy}>© {new Date().getFullYear()} Poleshuc.shop</div>
       </footer>
     </div>
   );

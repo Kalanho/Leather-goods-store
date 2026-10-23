@@ -4,7 +4,7 @@ export const generateOrderNumber = async (): Promise<string> => {
   const year = new Date().getFullYear();
   const prefix = `MC-${year}-`;
 
-  // Находим последний заказ этого года
+  
   const lastOrder = await Order.findOne({
     orderNumber: { $regex: `^${prefix}` },
   })

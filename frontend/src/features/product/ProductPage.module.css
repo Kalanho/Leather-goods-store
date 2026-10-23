@@ -1,0 +1,32 @@
+.priceBlock {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+    margin: 24px 0;
+  }
+  
+  .price {
+    font-family: var(--font-serif);
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--color-leather-dark);
+  }
+  
+  .preorder {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    font-style: italic;
+  }
+  
+  .divider {
+    height: 1px;
+    background: var(--color-border);
+    margin: 24px 0;
+  }
+  
+  .stock {
+    font-size: 0.9rem;
+    margin-top: 24px;
+  }
+  .inStock { color: #3a7a3a; }
+  .outOfStock { color: #a02020; }

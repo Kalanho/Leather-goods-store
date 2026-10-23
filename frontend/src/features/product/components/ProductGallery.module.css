@@ -1,0 +1,139 @@
+.gallery {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+  }
+  
+  /* ─── Превью ─── */
+  .thumbs {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 80px;
+    flex-shrink: 0;
+  }
+  
+  .thumb,
+  .thumbActive {
+    width: 80px;
+    height: 80px;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color var(--transition);
+  }
+  .thumb:hover { border-color: var(--color-leather-light); }
+  .thumbActive { border-color: var(--color-leather); }
+  
+  .thumb img,
+  .thumbActive img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  /* ─── Основное фото ─── */
+  .main {
+    position: relative;
+    flex: 1;
+    aspect-ratio: 1 / 1;
+    background: #f0f0f0;
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    user-select: none;
+  }
+  
+  .mainImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 400ms ease;
+  }
+  
+  .main:hover .mainImage {
+    transform: scale(1.03);
+  }
+  
+  /* ─── Стрелки ─── */
+  .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--color-border);
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--color-dark);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition);
+    opacity: 0;
+  }
+  .main:hover .arrow { opacity: 1; }
+  .arrow:hover {
+    background: var(--color-leather);
+    color: #fff;
+    border-color: var(--color-leather);
+  }
+  
+  .arrowPrev { left: 12px; }
+  .arrowNext { right: 12px; }
+  
+  /* ─── Точки (мобильный) ─── */
+  .dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+  }
+  
+  .dot,
+  .dotActive {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.5);
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  .dotActive {
+    background: var(--color-leather-light);
+    width: 24px;
+    border-radius: 4px;
+  }
+  
+  /* ─── Заглушка ─── */
+  .placeholder {
+    aspect-ratio: 1 / 1;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+  }
+  
+  /* ─── Мобильный режим ─── */
+  @media (max-width: 768px) {
+    .gallery {
+      display: block;
+      position: relative;
+    }
+  
+    .main {
+      aspect-ratio: 1 / 1;
+      border-radius: 0;
+    }
+  
+    /* Прячем стрелки — на мобильном работает свайп */
+    .arrow { display: none; }
+  }

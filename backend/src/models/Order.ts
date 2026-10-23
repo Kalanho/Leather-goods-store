@@ -1,4 +1,3 @@
-// src/models/Order.ts
 import mongoose, { Schema, Document, Types } from 'mongoose';
 
 export interface IOrderItem {
@@ -10,10 +9,10 @@ export interface IOrderItem {
   price: number;
   personalization?: {
     type: 'text' | 'image';
-    value: string;      // текст гравировки или ссылка на картинку
+    value: string;      
     price: number;
   };
-  giftBox?: boolean;    // добавить подарочную упаковку
+  giftBox?: boolean;    
   giftBoxPrice?: number;
 }
 
@@ -21,14 +20,14 @@ export interface ICustomer {
   fullName: string;
   phone: string;
   email: string;
-  address: string;       // для СДЭК
+  address: string;       
   city: string;
   postalCode?: string;
   comment?: string;
 }
 
 export interface IOrder extends Document {
-  orderNumber: string;   // например, MC-2025-0001
+  orderNumber: string;   
   customer: ICustomer;
   items: IOrderItem[];
   subtotal: number;
@@ -39,7 +38,7 @@ export interface IOrder extends Document {
 
   delivery: {
     provider: 'cdek' | 'pickup' | 'other';
-    method: string;        // ПВЗ, курьер
+    method: string;        
     trackNumber?: string;
     status: string;
   };

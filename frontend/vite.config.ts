@@ -6,13 +6,19 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      // Используем import.meta.dirname вместо __dirname
+      '@': path.resolve(import.meta.dirname, './src'),
     },
   },
   server: {
     port: 5173,
     proxy: {
       '/api': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
+      },
+      // Не забудьте добавить прокси для картинок!
+      '/uploads': {
         target: 'http://localhost:5000',
         changeOrigin: true,
       },
