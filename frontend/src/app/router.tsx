@@ -10,12 +10,14 @@ import { ArticlesPage } from '@/features/static/ArticlesPage';
 import { InfoPage } from '@/features/static/InfoPage';
 import { ContactsPage } from '@/features/static/ContactsPage';
 import { NotFoundPage } from '@/features/static/NotFoundPage';
-
+import { AdminProductCreate } from '@/features/admin/AdminProductCreate';
+import { AdminProductEdit } from '@/features/admin/AdminProductEdit';
 // Импорты админки
 import { LoginPage } from '@/features/admin/LoginPage';
 import { ProtectedRoute } from '@/features/admin/ProtectedRoute';
 import { AdminLayout } from '@/features/admin/AdminLayout';
 import { AdminProductsPage } from '@/features/admin/AdminProductsPage';
+import { AdminOrdersPage } from '@/features/admin/AdminOrdersPage';
 
 export const AppRouter = () => {
   return (
@@ -36,13 +38,15 @@ export const AppRouter = () => {
 
       {/* === АДМИНКА === */}
       <Route path="/admin/login" element={<LoginPage />} />
+      <Route path="/admin/orders" element={<AdminOrdersPage />} />
 
       <Route element={<ProtectedRoute />}>
         <Route element={<AdminLayout />}>
           {/* При заходе на /admin редиректим на /admin/products */}
           <Route path="/admin" element={<Navigate to="/admin/products" replace />} />
           <Route path="/admin/products" element={<AdminProductsPage />} />
-          
+          <Route path="/admin/products/new" element={<AdminProductCreate />} />
+<Route path="/admin/products/:id/edit" element={<AdminProductEdit />} />
           {/* Заглушка для остальных страниц админки */}
           <Route path="/admin/products/new" element={<div>Форма добавления (следующий шаг)</div>} />
           <Route path="/admin/orders" element={<div>Заказы (следующий шаг)</div>} />

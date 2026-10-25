@@ -1,91 +1,130 @@
 .layout {
-    display: flex;
-    min-height: 100vh;
-    background: #f4f4f5; /* Чуть темнее, чем публичный сайт */
-  }
-  
-  .sidebar {
-    width: 260px;
-    background: var(--color-dark);
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    padding: 32px 0;
-    flex-shrink: 0;
-  }
-  
-  .brand {
-    font-family: var(--font-serif);
-    font-size: 1.5rem;
-    letter-spacing: 0.15em;
-    padding: 0 32px;
-    margin-bottom: 48px;
-    line-height: 1.1;
-  }
-  
-  .brandSub {
-    font-family: var(--font-sans);
-    font-size: 0.7rem;
-    color: var(--color-leather-light);
-    letter-spacing: 0.2em;
-  }
-  
-  .nav {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
-  
-  .link, .active {
-    padding: 16px 32px;
-    color: rgba(255, 255, 255, 0.7);
-    text-decoration: none;
-    font-size: 0.95rem;
-    transition: all 0.2s;
-    border-left: 3px solid transparent;
-  }
-  
-  .link:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.05);
-  }
-  
-  .active {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.1);
-    border-left-color: var(--color-leather-light);
-  }
-  
-  .bottom {
-    padding: 0 32px;
-    margin-top: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  
-  .user {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.5);
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  
-  .logout {
-    padding: 10px;
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: #fff;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  
-  .logout:hover {
-    background: rgba(255, 255, 255, 0.1);
-  }
-  
-  .main {
-    flex: 1;
-    padding: 48px;
-    overflow-y: auto;
-  }
+  display: flex;
+  min-height: 100vh;
+  background: #f4f5f7;
+}
+
+.sidebar {
+  width: 260px;
+  background: #1a1a1a; /* Темный фон админки */
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+}
+
+.brand {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  letter-spacing: 0.15em;
+  padding: 32px;
+  line-height: 1.2;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.brandSub {
+  font-family: var(--font-sans);
+  font-size: 0.65rem;
+  color: var(--color-leather-light);
+  letter-spacing: 0.2em;
+  display: block;
+  margin-top: 4px;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  padding: 24px 0;
+  flex: 1;
+}
+
+.link, .active {
+  padding: 14px 32px;
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.active {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.05);
+  border-left-color: var(--color-leather-light);
+}
+
+.bottom {
+  padding: 24px 32px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.user {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 8px;
+}
+
+.viewSiteBtn {
+  display: block;
+  text-align: center;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.viewSiteBtn:hover { background: rgba(255, 255, 255, 0.2); }
+
+.logout {
+  padding: 10px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ff8a8a;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.logout:hover {
+  background: rgba(255, 100, 100, 0.1);
+  border-color: #ff8a8a;
+}
+
+/* Правая часть */
+.main {
+  flex: 1;
+  margin-left: 260px; /* Отступ под фиксированный сайдбар */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.topBar {
+  height: 64px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.content {
+  padding: 40px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}

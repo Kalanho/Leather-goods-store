@@ -1,23 +1,38 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/api/client';
 import { fetchProducts } from '@/api/products';
 import styles from './AdminProductsPage.module.css';
 
+// Словарь для перевода подкатегорий
+const CATEGORY_LABELS: Record<string, string> = {
+  documents: 'Для документов',
+  wallets: 'Кошельки',
+  belts: 'Ремни',
+  bags: 'Сумки',
+  gift_sets: 'Подарочные наборы',
+  accessories: 'Кожаные аксессуары',
+  gift_boxes: 'Подарочные упаковки',
+  none: 'Без категории'
+};
+
 export const AdminProductsPage = () => {
   const queryClient = useQueryClient();
+  
+  // Состояние для фильтра
+  const [filterCategory, setFilterCategory] = useState<string>('all');
 
-  // 1. Получаем товары (пока используем публичный роут, чуть позже заменим на админский)
+  // 1. Получаем товары
   const { data, isLoading } = useQuery({
     queryKey: ['admin-products'],
-    queryFn: () => fetchProducts({ limit: 100 }), // берем все
+    queryFn: () => fetchProducts({ limit: 100 }),
   });
 
   // 2. Мутация для скрытия (мягкого удаления)
   const deleteMutation = useMutation({
     mutationFn: (id: string) => api.delete(`/products/${id}`),
     onSuccess: () => {
-      // Обновляем список после удаления
       queryClient.invalidateQueries({ queryKey: ['admin-products'] });
       queryClient.invalidateQueries({ queryKey: ['products'] });
     },
@@ -34,6 +49,11 @@ export const AdminProductsPage = () => {
 
   if (isLoading) return <div>Загрузка товаров…</div>;
 
+  // Фильтруем товары перед отрисовкой
+  const filteredProducts = data?.data.filter(product => 
+    filterCategory === 'all' ? true : product.subCategory === filterCategory
+  ) || [];
+
   return (
     <div>
       <div className={styles.header}>
@@ -41,6 +61,28 @@ export const AdminProductsPage = () => {
         <Link to="/admin/products/new" className={styles.addBtn}>
           + Добавить товар
         </Link>
+      </div>
+
+      {/* Блок с фильтром */}
+      <div className={styles.filters}>
+        <label>
+          Показать категорию:
+          <select 
+            value={filterCategory} 
+            onChange={(e) => setFilterCategory(e.target.value)}
+            className={styles.select}
+          >
+            <option value="all">Все товары</option>
+            <option value="belts">Ремни</option>
+            <option value="bags">Сумки</option>
+            <option value="wallets">Кошельки</option>
+            <option value="documents">Для документов</option>
+            <option value="gift_sets">Подарочные наборы</option>
+            <option value="accessories">Аксессуары</option>
+            <option value="gift_boxes">Упаковки</option>
+          </select>
+        </label>
+        <span className={styles.count}>Найдено: {filteredProducts.length}</span>
       </div>
 
       <div className={styles.tableWrap}>
@@ -56,7 +98,7 @@ export const AdminProductsPage = () => {
             </tr>
           </thead>
           <tbody>
-            {data?.data.map((product) => (
+            {filteredProducts.map((product) => (
               <tr key={product._id}>
                 <td>
                   {product.images[0] ? (
@@ -70,7 +112,9 @@ export const AdminProductsPage = () => {
                   <br />
                   <small className={styles.slug}>{product.slug}</small>
                 </td>
-                <td>{product.subCategory}</td>
+                <td>
+                  {CATEGORY_LABELS[product.subCategory] || product.subCategory}
+                </td>
                 <td>{product.basePrice} ₽</td>
                 <td>
                   {product.isActive ? (
@@ -101,8 +145,8 @@ export const AdminProductsPage = () => {
           </tbody>
         </table>
         
-        {data?.data.length === 0 && (
-          <div className={styles.empty}>Товаров пока нет. Добавьте первый!</div>
+        {filteredProducts.length === 0 && (
+          <div className={styles.empty}>В этой категории пока нет товаров.</div>
         )}
       </div>
     </div>

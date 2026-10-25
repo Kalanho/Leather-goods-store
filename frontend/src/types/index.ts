@@ -84,3 +84,29 @@ export interface CartItem {
   giftBox?: boolean;
   giftBoxPrice?: number;
 }
+export interface Order {
+  _id: string;
+  orderNumber: string;
+  customer: {
+    fullName: string;
+    phone: string;
+    email: string;
+    city: string;
+    address: string;
+    postalCode?: string;
+    comment?: string;
+  };
+  items: Array<{
+    productId: any;
+    variantSku: string;
+    color: string;
+    quantity: number;
+    price: number;
+    personalization?: { type: string; value: string; price: number };
+    giftBox?: boolean;
+  }>;
+  total: number;
+  payment: { status: string; paidAt?: string };
+  delivery: { provider: string; status: string; trackNumber?: string };
+  createdAt: string;
+}
