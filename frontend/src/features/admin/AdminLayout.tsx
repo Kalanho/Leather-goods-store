@@ -14,7 +14,6 @@ export const AdminLayout = () => {
 
   return (
     <div className={styles.layout}>
-      {/* Сайдбар */}
       <aside className={styles.sidebar}>
         <div className={styles.brand}>
           MANTICORE<br />
@@ -26,13 +25,13 @@ export const AdminLayout = () => {
             to="/admin/products" 
             className={({ isActive }) => isActive ? styles.active : styles.link}
           >
-            📦 Товары
+            <span style={{ marginRight: '8px' }}>📦</span> Товары
           </NavLink>
           <NavLink 
             to="/admin/orders" 
             className={({ isActive }) => isActive ? styles.active : styles.link}
           >
-            🛒 Заказы
+            <span style={{ marginRight: '8px' }}>🛒</span> Заказы
           </NavLink>
         </nav>
 
@@ -52,11 +51,9 @@ export const AdminLayout = () => {
         </div>
       </aside>
 
-      {/* Контентная часть */}
+      {/* Правая часть с контентом */}
       <main className={styles.main}>
-        <div className={styles.topBar}>
-           {/* Пустая панель для красоты, можно потом добавить хлебные крошки */}
-        </div>
+        <div className={styles.topBar}></div>
         <div className={styles.content}>
           <Outlet />
         </div>

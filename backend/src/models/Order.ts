@@ -9,10 +9,10 @@ export interface IOrderItem {
   price: number;
   personalization?: {
     type: 'text' | 'image';
-    value: string;      
+    value: string;
     price: number;
   };
-  giftBox?: boolean;    
+  giftBox?: boolean;
   giftBoxPrice?: number;
 }
 
@@ -20,25 +20,28 @@ export interface ICustomer {
   fullName: string;
   phone: string;
   email: string;
-  address: string;       
+  address: string;
   city: string;
   postalCode?: string;
   comment?: string;
 }
 
 export interface IOrder extends Document {
-  orderNumber: string;   
+  orderNumber: string;
   customer: ICustomer;
   items: IOrderItem[];
   subtotal: number;
   deliveryPrice: number;
   discount: number;
   total: number;
-  promoCode?: string;
+  isArchived?: boolean;
+  
+  // Архивация (выполнен / в архиве)
+  isCompleted: boolean; 
 
   delivery: {
     provider: 'cdek' | 'pickup' | 'other';
-    method: string;        
+    method: string;
     trackNumber?: string;
     status: string;
   };
@@ -99,7 +102,9 @@ const OrderSchema = new Schema<IOrder>(
     deliveryPrice: { type: Number, required: true, default: 0, min: 0 },
     discount: { type: Number, default: 0, min: 0 },
     total: { type: Number, required: true, min: 0 },
-    promoCode: { type: String },
+    
+    // Архивация заказа
+    isCompleted: { type: Boolean, default: false, index: true },
 
     delivery: {
       provider: { type: String, enum: ['cdek', 'pickup', 'other'], required: true },
@@ -118,7 +123,9 @@ const OrderSchema = new Schema<IOrder>(
       paidAt: { type: Date },
       externalId: { type: String },
     },
+    isArchived: { type: Boolean, default: false, index: true },
   },
+  
   { timestamps: true }
 );
 

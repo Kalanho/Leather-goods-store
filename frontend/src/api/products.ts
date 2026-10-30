@@ -31,3 +31,9 @@ export const fetchProductBySlug = async (slug: string): Promise<Product> => {
   );
   return data.data;
 };
+export const fetchTopProducts = async (): Promise<Product[]> => {
+  const { data } = await api.get<ProductsResponse>('/products', {
+    params: { isTopSelling: true, limit: 4 },
+  });
+  return data.data;
+};

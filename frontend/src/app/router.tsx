@@ -12,6 +12,7 @@ import { ContactsPage } from '@/features/static/ContactsPage';
 import { NotFoundPage } from '@/features/static/NotFoundPage';
 import { AdminProductCreate } from '@/features/admin/AdminProductCreate';
 import { AdminProductEdit } from '@/features/admin/AdminProductEdit';
+import { ThankYouPage } from '@/features/checkout/ThankYouPage';
 // Импорты админки
 import { LoginPage } from '@/features/admin/LoginPage';
 import { ProtectedRoute } from '@/features/admin/ProtectedRoute';
@@ -34,6 +35,7 @@ export const AppRouter = () => {
         <Route path="/info" element={<InfoPage />} />
         <Route path="/contacts" element={<ContactsPage />} />
         <Route path="*" element={<NotFoundPage />} />
+        <Route path="/thank-you" element={<ThankYouPage />} />
       </Route>
 
       {/* === АДМИНКА === */}

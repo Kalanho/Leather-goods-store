@@ -1,151 +1,234 @@
-/* Общая обертка для контента админки */
 .pageWrapper {
-    max-width: 1200px; /* Ограничиваем ширину, чтобы не было пустоты */
-    margin: 0 auto;
-  }
-  
-  .header {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    margin-bottom: 32px;
-  }
-  
-  .header h1 {
-    font-family: var(--font-serif);
-    font-size: 2.25rem;
-    color: var(--color-dark);
-  }
-  
-  /* Красивая таблица */
-  .tableWrap {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-    border: 1px solid var(--color-border);
-    overflow: hidden; /* Чтобы скругленные углы работали */
-  }
-  
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-  }
-  
-  .table th {
-    background: #f8f8f8;
-    padding: 16px 24px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: #888;
-    border-bottom: 1px solid var(--color-border);
-  }
-  
-  .table td {
-    padding: 20px 24px;
-    border-bottom: 1px solid #f0f0f0;
-    vertical-align: middle;
-    font-size: 0.95rem;
-    color: var(--color-text);
-  }
-  
-  .table tr:last-child td {
-    border-bottom: none;
-  }
-  
-  .table tr:hover td {
-    background: #fafafa; /* Легкий ховер на строку */
-  }
-  
-  /* Бейджи статусов */
-  .badge {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-  }
-  
-  .statusPaid {
-    background: #e8f5e9;
-    color: #2e7d32;
-  }
-  
-  .statusPending {
-    background: #fff3e0;
-    color: #e65100;
-  }
-  
-  .statusCancelled {
-    background: #ffebee;
-    color: #c62828;
-  }
-  
-  /* Кнопка "Подробнее" */
-  .detailsBtn {
-    padding: 8px 16px;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    color: var(--color-text);
-  }
-  
-  .detailsBtn:hover {
-    border-color: var(--color-leather);
-    color: var(--color-leather);
-    background: rgba(139, 90, 43, 0.05);
-  }
-  
-  /* Пустое состояние */
-  .empty {
-    padding: 80px 20px;
-    text-align: center;
-    color: #888;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 16px;
-  }
-  
-  .emptyIcon {
-    font-size: 3rem;
-    opacity: 0.2;
-  }
-  
-  .emptyText {
-    font-size: 1.1rem;
-  }
-  .titleGroup {
-    display: flex;
-    flex-direction: column;
-    gap: 16px; /* Чуть больше воздуха между ссылкой и заголовком */
-    align-items: flex-start;
-    margin-top: 24px; /* Отступ сверху для всей группы */
-    margin-bottom: 12px;
-  }
-  .titleGroup h1 {
-    font-family: var(--font-serif);
-    font-size: 2.25rem;
-    color: var(--color-dark);
-    margin: 0; /* Убираем стандартный отступ браузера */
-    line-height: 1.2;
-  }
-  .backLink {
-    display: inline-flex;
-    align-items: center;
-    font-size: 0.95rem;
-    color: var(--color-text-muted);
-    text-decoration: none;
-    transition: color 0.2s;
-    padding: 8px 0; /* Добавляем кликабельную область */
-  }
-  
-  .backLink:hover {
-    color: var(--color-leather);
-  }
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 80px; /* Добавили отступы по бокам и снизу */
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.header {
+  margin-bottom: 40px;
+}
+
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #666;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+  background: #fff;
+  padding: 8px 16px;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  margin-bottom: 24px;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+}
+
+.backLink:hover {
+  color: #1a1a1a;
+  border-color: #ccc;
+  background: #fcfcfc;
+  transform: translateX(-2px); /* Легкая анимация сдвига влево */
+}
+
+.header h1 {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  margin-bottom: 8px;
+  color: #1a1a1a;
+}
+
+.subtitle {
+  color: #888;
+  font-size: 0.95rem;
+}
+
+/* Вкладки */
+.tabs {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.tab, .activeTab {
+  padding: 12px 0;
+  background: none;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+
+.tab:hover {
+  color: #333;
+}
+
+.activeTab {
+  color: var(--color-leather);
+  border-bottom-color: var(--color-leather);
+  font-weight: 500;
+}
+
+/* Таблица */
+.tableWrap {
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+  overflow-x: auto;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 900px;
+}
+
+.table th {
+  background: #fafafa;
+  padding: 16px 24px;
+  text-align: left;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #888;
+  border-bottom: 1px solid #e5e5e5;
+  white-space: nowrap;
+  font-weight: 600;
+}
+
+.table td {
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.95rem;
+  vertical-align: middle;
+  color: #333;
+}
+
+.table tr:last-child td {
+  border-bottom: none;
+}
+
+.table tr:hover td {
+  background: #fcfcfc;
+}
+
+.clientName {
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.phone {
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.muted {
+  color: #ccc;
+}
+
+/* Статусы */
+.statusPaid, .statusPending {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.statusPaid {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.statusPending {
+  background: #fff8e1;
+  color: #f57f17;
+}
+
+/* Кнопки действий */
+.actionsCell {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.detailsBtn {
+  padding: 8px 16px;
+  border: 1px solid #e5e5e5;
+  background: #fff;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #333;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.detailsBtn:hover {
+  border-color: var(--color-leather);
+  color: var(--color-leather);
+  background: #fafafa;
+}
+
+.archiveBtn {
+  padding: 8px 16px;
+  border: 1px solid #e5e5e5;
+  background: #f9f9f9;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #666;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.archiveBtn:hover {
+  background: #f0f0f0;
+  border-color: #d1d1d1;
+  color: #333;
+}
+
+.deleteBtn {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #fee2e2;
+  background: #fff;
+  color: #ef4444;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  line-height: 1;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.deleteBtn:hover {
+  background: #fef2f2;
+  border-color: #fca5a5;
+}
+
+.empty {
+  padding: 80px 24px;
+  text-align: center;
+  color: #888;
+  font-size: 1.1rem;
+}

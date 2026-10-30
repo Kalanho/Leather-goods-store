@@ -177,61 +177,76 @@ export const getOrderByNumber = asyncHandler(
 // GET /api/orders
 // Список заказов (для админа — позже закроем)
 // ─────────────────────────────────────────────
-export const getAllOrders = asyncHandler(
-  async (req: Request, res: Response) => {
-    const { status, page = '1', limit = '20' } = req.query;
+// GET /api/orders
+export const getAllOrders = asyncHandler(async (req: Request, res: Response) => {
+  const { status, page = '1', limit = '20', archived } = req.query;
 
-    const filter: any = {};
-    if (status) filter['payment.status'] = status;
-
-    const pageNum = Math.max(1, Number(page));
-    const limitNum = Math.min(100, Math.max(1, Number(limit)));
-
-    const [items, total] = await Promise.all([
-      Order.find(filter)
-        .sort('-createdAt')
-        .skip((pageNum - 1) * limitNum)
-        .limit(limitNum)
-        .lean(),
-      Order.countDocuments(filter),
-    ]);
-
-    res.status(200).json({
-      success: true,
-      data: items,
-      pagination: {
-        total,
-        page: pageNum,
-        limit: limitNum,
-        pages: Math.ceil(total / limitNum),
-      },
-    });
+  const filter: any = {};
+  
+  // Фильтр по архиву (если archived=true, показываем только архивные, иначе только активные)
+  if (archived === 'true') {
+    filter.isArchived = true;
+  } else {
+    filter.isArchived = { $ne: true }; // по умолчанию скрываем архивные
   }
-);
+
+  if (status) filter['payment.status'] = status;
+
+  const pageNum = Math.max(1, Number(page));
+  const limitNum = Math.min(100, Math.max(1, Number(limit)));
+
+  const [items, total] = await Promise.all([
+    Order.find(filter)
+      .sort('-createdAt')
+      .skip((pageNum - 1) * limitNum)
+      .limit(limitNum)
+      .lean(),
+    Order.countDocuments(filter),
+  ]);
+
+  res.status(200).json({
+    success: true,
+    data: items,
+    pagination: {
+      total,
+      page: pageNum,
+      limit: limitNum,
+      pages: Math.ceil(total / limitNum),
+    },
+  });
+});
 
 // ─────────────────────────────────────────────
 // PATCH /api/orders/:id/status
 // Смена статуса оплаты / доставки
 // ─────────────────────────────────────────────
-export const updateOrderStatus = asyncHandler(
-  async (req: Request, res: Response) => {
-    const { id } = req.params;
-    const { paymentStatus, deliveryStatus, trackNumber } = req.body;
+// PATCH /api/orders/:id/status (добавьте поддержку isArchived)
+export const updateOrderStatus = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const { paymentStatus, deliveryStatus, trackNumber, isArchived } = req.body;
 
-    const update: any = {};
-    if (paymentStatus) {
-      update['payment.status'] = paymentStatus;
-      if (paymentStatus === 'paid') update['payment.paidAt'] = new Date();
-    }
-    if (deliveryStatus) update['delivery.status'] = deliveryStatus;
-    if (trackNumber) update['delivery.trackNumber'] = trackNumber;
-
-    const order = await Order.findByIdAndUpdate(id, update, { new: true });
-
-    if (!order) {
-      throw new AppError('Заказ не найден', 404);
-    }
-
-    res.status(200).json({ success: true, data: order });
+  const update: any = {};
+  if (paymentStatus) {
+    update['payment.status'] = paymentStatus;
+    if (paymentStatus === 'paid') update['payment.paidAt'] = new Date();
   }
-);
+  if (deliveryStatus) update['delivery.status'] = deliveryStatus;
+  if (trackNumber) update['delivery.trackNumber'] = trackNumber;
+  if (isArchived !== undefined) update.isArchived = isArchived;
+
+  const order = await Order.findByIdAndUpdate(id, update, { new: true });
+
+  if (!order) throw new AppError('Заказ не найден', 404);
+
+  res.status(200).json({ success: true, data: order });
+});
+
+// DELETE /api/orders/:id
+export const deleteOrder = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const order = await Order.findByIdAndDelete(id);
+
+  if (!order) throw new AppError('Заказ не найден', 404);
+
+  res.status(200).json({ success: true, message: 'Заказ удален' });
+});

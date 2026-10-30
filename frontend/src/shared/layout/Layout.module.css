@@ -3,102 +3,132 @@
 .header {
   background: var(--color-dark);
   color: #fff;
-  padding: 20px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .headerInner {
   max-width: var(--container);
   margin: 0 auto;
-  padding: 0 24px;
+  padding: 16px 32px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 32px;
 }
 
-.logo { display: flex; flex-direction: column; line-height: 1; }
-.logoMain {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  letter-spacing: 0.15em;
-  color: #fff;
-}
-.logoTagline {
-  font-family: var(--font-script);
-  font-size: 1rem;
-  color: var(--color-leather-light);
-  margin-top: 4px;
+/* Логотип */
+.logo { display: flex; flex-direction: column; line-height: 1; z-index: 102; }
+.logoMain { font-family: var(--font-serif); font-size: 1.5rem; letter-spacing: 0.15em; color: #fff; }
+.logoTagline { font-family: var(--font-script); font-size: 1rem; color: var(--color-leather-light); margin-top: 4px; }
+
+/* Десктопное меню */
+.desktopNav { display: flex; gap: 28px; }
+.desktopNav a { color: rgba(255, 255, 255, 0.75); font-size: 0.95rem; text-decoration: none; }
+.desktopNav a:hover, .desktopNav a.active { color: var(--color-leather-light); }
+
+/* Действия */
+.actions { display: flex; align-items: center; gap: 16px; z-index: 102; }
+.phone { color: #fff; font-weight: 500; text-decoration: none; }
+.cart { color: #fff; text-decoration: none; position: relative; }
+.badge { display: inline-block; background: var(--color-leather-light); color: var(--color-dark); font-size: 0.75rem; font-weight: 600; padding: 2px 7px; border-radius: 10px; margin-left: 6px; }
+
+/* Бургер */
+.burgerBtn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  width: 40px;
+  height: 40px;
 }
 
-.nav { display: flex; gap: 28px; }
-.nav a {
-  color: rgba(255, 255, 255, 0.75);
-  font-size: 0.95rem;
-  letter-spacing: 0.02em;
-}
-.nav a:hover { color: var(--color-leather-light); }
-
-.actions { display: flex; align-items: center; gap: 20px; }
-.phone { color: #fff; font-weight: 500; }
-.cart { color: #fff; position: relative; }
-.badge {
-  display: inline-block;
-  background: var(--color-leather-light);
-  color: var(--color-dark);
-  font-size: 0.75rem;
-  font-weight: 600;
-  padding: 2px 7px;
-  border-radius: 10px;
-  margin-left: 6px;
-}
-
-.main { flex: 1; padding: 48px 0; }
-
-.footer {
-  background: var(--color-dark);
-  color: rgba(255, 255, 255, 0.7);
-  padding: 48px 0 24px;
-  margin-top: 64px;
-}
-.footerInner {
-  max-width: var(--container);
-  margin: 0 auto;
-  padding: 0 24px;
-  display: grid;
-  grid-template-columns: 2fr 1fr 1fr;
-  gap: 48px;
-}
-.footerLogo {
-  font-family: var(--font-serif);
-  letter-spacing: 0.15em;
-  font-size: 1.25rem;
-  color: #fff;
-  margin-bottom: 12px;
-}
-.footerText { font-size: 0.9rem; line-height: 1.6; }
-.footerCol h4 {
-  font-family: var(--font-sans);
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #fff;
-  margin-bottom: 16px;
-  font-weight: 500;
-}
-.footerCol a {
+.burgerIcon { width: 24px; height: 18px; position: relative; }
+.burgerIcon span {
   display: block;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.9rem;
-  margin-bottom: 8px;
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  background: #fff;
+  transition: all 0.3s ease;
 }
-.footerCol a:hover { color: var(--color-leather-light); }
+.burgerIcon span:nth-child(1) { top: 0; }
+.burgerIcon span:nth-child(2) { top: 8px; }
+.burgerIcon span:nth-child(3) { top: 16px; }
 
-.copy {
-  text-align: center;
-  margin-top: 40px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.4);
+.burgerOpen span:nth-child(1) { top: 8px; transform: rotate(45deg); }
+.burgerOpen span:nth-child(2) { opacity: 0; }
+.burgerOpen span:nth-child(3) { top: 8px; transform: rotate(-45deg); }
+
+/* Мобильное меню */
+.mobileMenu {
+  position: fixed;
+  top: 73px; /* Высота шапки */
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 73px);
+  background: var(--color-dark);
+  transform: translateX(-100%);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 101;
+  display: flex;
+  flex-direction: column;
+}
+
+.mobileMenuOpen {
+  transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+}
+
+.mobileNav {
+  display: flex;
+  flex-direction: column;
+  padding: 32px;
+  gap: 24px;
+}
+
+.mobileLink, .mobileActive {
+  font-size: 1.25rem;
+  color: rgba(255, 255, 255, 0.8);
+  text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+}
+.mobileActive { color: var(--color-leather-light); }
+
+.mobilePhone {
+  color: var(--color-leather-light);
+  font-size: 1.25rem;
+  margin-top: 16px;
+  text-decoration: none;
+}
+
+.main { flex: 1; padding: 32px 0; }
+
+/* Подвал */
+.footer { background: var(--color-dark); color: rgba(255, 255, 255, 0.7); padding: 48px 0 24px; margin-top: auto; }
+.footerInner { max-width: var(--container); margin: 0 auto; padding: 0 32px; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 48px; }
+.footerLogo { font-family: var(--font-serif); letter-spacing: 0.15em; font-size: 1.25rem; color: #fff; margin-bottom: 12px; }
+.footerText { font-size: 0.9rem; line-height: 1.6; }
+.footerCol h4 { font-family: var(--font-sans); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; color: #fff; margin-bottom: 16px; font-weight: 500; }
+.footerCol a { display: block; color: rgba(255, 255, 255, 0.7); font-size: 0.9rem; margin-bottom: 8px; text-decoration: none; }
+.footerCol a:hover { color: var(--color-leather-light); }
+.copy { text-align: center; margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255, 255, 255, 0.08); font-size: 0.8rem; color: rgba(255, 255, 255, 0.4); }
+
+/* === АДАПТИВ === */
+@media (max-width: 1024px) {
+  .phone { display: none; }
+  .desktopNav { gap: 16px; }
+}
+
+@media (max-width: 768px) {
+  .headerInner { padding: 16px; }
+  .desktopNav { display: none; }
+  .burgerBtn { display: block; }
+  .footerInner { grid-template-columns: 1fr; gap: 32px; text-align: center; }
 }

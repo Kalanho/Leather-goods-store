@@ -1,32 +1,178 @@
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  align-items: start;
+}
+
+.galleryCol { min-width: 0; }
+
+.infoCol {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.title {
+  font-family: var(--font-serif);
+  font-size: 2.5rem;
+  line-height: 1.1;
+  margin-bottom: 0;
+}
+
+.short {
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  margin-top: -12px;
+}
+
 .priceBlock {
-    display: flex;
-    align-items: baseline;
-    gap: 16px;
-    margin: 24px 0;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.price {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--color-leather-dark);
+}
+
+.preOrder {
+  font-size: 0.85rem;
+  color: #d97706;
+  background: #fef3c7;
+  padding: 4px 10px;
+  border-radius: 4px;
+}
+
+.divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: 8px 0;
+}
+
+.optionGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.optionLabel {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+.optionLabel strong { color: var(--color-text); }
+
+/* Цвета */
+.colors { display: flex; gap: 8px; flex-wrap: wrap; }
+.colorBtn, .colorActive {
+  padding: 8px 16px;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.colorBtn:hover { border-color: var(--color-leather-light); }
+.colorActive {
+  border-color: var(--color-leather);
+  background: var(--color-leather);
+  color: #fff;
+}
+
+/* Размеры */
+.sizes { display: flex; gap: 8px; flex-wrap: wrap; }
+.sizeBtn, .sizeActive {
+  min-width: 48px;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border);
+  background: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+.sizeBtn:hover { border-color: var(--color-leather-light); }
+.sizeActive {
+  border-color: var(--color-leather);
+  background: var(--color-leather);
+  color: #fff;
+}
+
+/* Чекбоксы и гравировка */
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.engravingInput {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  font-size: 0.95rem;
+  width: 100%;
+  max-width: 300px;
+}
+.engravingInput:focus { outline: none; border-color: var(--color-leather); }
+
+/* Кнопка купить */
+.buyBtn {
+  margin-top: 16px;
+  padding: 18px;
+  background: var(--color-dark);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.buyBtn:hover:not(:disabled) { background: var(--color-leather); }
+.buyBtn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Характеристики */
+.specs {
+  margin-top: 16px;
+  padding-top: 24px;
+  border-top: 1px solid var(--color-border);
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+.specs h4 {
+  color: var(--color-text);
+  margin-bottom: 12px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.specs p { margin-bottom: 6px; }
+
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; gap: 32px; }
+  .title { font-size: 2rem; }
+}
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr; /* Галерея сверху, инфо снизу */
+    gap: 24px;
   }
   
-  .price {
-    font-family: var(--font-serif);
-    font-size: 2rem;
-    font-weight: 600;
-    color: var(--color-leather-dark);
-  }
+  .title { font-size: 1.75rem; }
   
-  .preorder {
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
-    font-style: italic;
+  .buyBtn {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    border-radius: 0;
+    margin: 0;
   }
-  
-  .divider {
-    height: 1px;
-    background: var(--color-border);
-    margin: 24px 0;
+
+  /* Отступ для контента, чтобы кнопка не перекрывала текст */
+  .infoCol {
+    padding-bottom: 80px; 
   }
-  
-  .stock {
-    font-size: 0.9rem;
-    margin-top: 24px;
-  }
-  .inStock { color: #3a7a3a; }
-  .outOfStock { color: #a02020; }
+}
