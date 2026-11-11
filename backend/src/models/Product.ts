@@ -15,7 +15,8 @@ export type SubCategory =
   | 'none';
 
 export interface IVariant {
-  color: string;
+  colorName: string;  // Было color
+  colorHex: string;   // Новое поле
   size?: string;
   sku: string;
   stock: number;
@@ -78,7 +79,8 @@ export interface IProduct extends Document {
 
 const VariantSchema = new Schema<IVariant>(
   {
-    color: { type: String, required: true },
+    colorName: { type: String, required: true }, // Изменили имя на colorName
+    colorHex: { type: String, default: '#000000' }, // Добавили HEX
     size: { type: String },
     sku: { type: String, required: true },
     stock: { type: Number, required: true, default: 0, min: 0 },

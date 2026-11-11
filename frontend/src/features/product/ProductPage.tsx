@@ -1,186 +1,140 @@
-import { useState, useMemo, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { fetchProductBySlug } from '@/api/products';
-import { ProductGallery } from './components/ProductGallery';
 import { useCartStore } from '@/store/cartStore';
+import { ProductGallery } from './components/ProductGallery';
 import styles from './ProductPage.module.css';
 
 export const ProductPage = () => {
   const { slug } = useParams<{ slug: string }>();
-  const navigate = useNavigate();
   const addItem = useCartStore((state) => state.addItem);
 
+  // Загружаем товар
   const { data: product, isLoading, isError } = useQuery({
     queryKey: ['product', slug],
     queryFn: () => fetchProductBySlug(slug!),
     enabled: !!slug,
   });
 
-  // === СОСТОЯНИЯ ВЫБОРА ===
-  const [selectedColor, setSelectedColor] = useState<string>('');
-  const [selectedSize, setSelectedSize] = useState<string>('');
-  const [engraving, setEngraving] = useState('');
-  const [wantEngraving, setWantEngraving] = useState(false);
-  const [wantGiftBox, setWantGiftBox] = useState(false);
+  // Состояния для выбора опций
+  const [selectedVariant, setSelectedVariant] = useState<any>(null);
+  const [personalization, setPersonalization] = useState('');
+  const [addGiftBox, setAddGiftBox] = useState(false);
+  const [quantity, setQuantity] = useState(1);
 
-  // Устанавливаем первый доступный цвет при загрузке
+  // Когда товар загрузился, выбираем первый вариант по умолчанию
   useEffect(() => {
-    if (product && product.variants.length > 0 && !selectedColor) {
-      setSelectedColor(product.variants[0].color);
+    if (product && product.variants.length > 0 && !selectedVariant) {
+      setSelectedVariant(product.variants[0]);
     }
-  }, [product, selectedColor]);
+  }, [product, selectedVariant]);
 
-  // Находим текущий выбранный вариант (цвет + размер)
-  const activeVariant = useMemo(() => {
-    if (!product) return null;
-    return product.variants.find(
-      (v) => v.color === selectedColor && (selectedSize ? v.size === selectedSize : true)
-    ) || product.variants.find((v) => v.color === selectedColor);
-  }, [product, selectedColor, selectedSize]);
+  if (isLoading) return <div className="container" style={{ padding: '64px 0' }}>Загрузка...</div>;
+  if (isError || !product) return <div className="container" style={{ padding: '64px 0' }}>Товар не найден</div>;
 
-  // Список доступных размеров для выбранного цвета
-  const availableSizes = useMemo(() => {
-    if (!product) return [];
-    return product.variants
-      .filter((v) => v.color === selectedColor && v.size)
-      .map((v) => v.size as string);
-  }, [product, selectedColor]);
+  // Считаем итоговую цену
+  const basePrice = selectedVariant ? selectedVariant.price : product.basePrice;
+  
+  let personalizationPrice = 0;
+  if (personalization && product.personalizationOptions?.length > 0) {
+    const textOption = product.personalizationOptions.find((o: any) => o.type === 'text');
+    if (textOption) personalizationPrice = textOption.price;
+  }
 
-  // Сбрасываем размер, если при смене цвета его нет
-  useEffect(() => {
-    if (availableSizes.length > 0 && !availableSizes.includes(selectedSize)) {
-      setSelectedSize(availableSizes[0]);
-    } else if (availableSizes.length === 0) {
-      setSelectedSize('');
-    }
-  }, [availableSizes, selectedSize]);
+  const giftBoxPrice = addGiftBox ? 500 : 0; // Пока фикс цена, позже можно вытащить из БД
+  const totalPrice = (basePrice + personalizationPrice + giftBoxPrice) * quantity;
 
-  // === РАСЧЕТ ЦЕНЫ ===
-  const priceData = useMemo(() => {
-    if (!product || !activeVariant) return { base: 0, engravingPrice: 0, boxPrice: 0, total: 0 };
-
-    const base = activeVariant.price;
-    
-    // Гравировка
-    const persOpt = product.personalizationOptions.find((o) => o.type === 'text' && o.isActive);
-    const engravingPrice = wantEngraving && persOpt ? persOpt.price : 0;
-
-    // Коробка (пока ставим фиксированную 500 руб., позже подтянем из БД реальный товар)
-    const boxPrice = wantGiftBox ? 500 : 0;
-
-    return { base, engravingPrice, boxPrice, total: base + engravingPrice + boxPrice };
-  }, [product, activeVariant, wantEngraving, wantGiftBox]);
-
-  // === ДОБАВЛЕНИЕ В КОРЗИНУ ===
   const handleAddToCart = () => {
-    if (!product || !activeVariant) return;
+    if (!selectedVariant) return;
 
     addItem({
       productId: product._id,
       slug: product.slug,
       name: product.name,
-      image: activeVariant.image || product.images[0],
-      variantSku: activeVariant.sku,
-      color: activeVariant.color,
-      size: activeVariant.size,
-      price: activeVariant.price,
-      quantity: 1,
-      personalization: wantEngraving && engraving.trim() ? {
-        type: 'text',
-        value: engraving.trim(),
-        price: priceData.engravingPrice
-      } : undefined,
-      giftBox: wantGiftBox,
-      giftBoxPrice: wantGiftBox ? 500 : 0,
+      image: product.images[0] || '',
+      variantSku: selectedVariant.sku,
+      color: selectedVariant.colorName, // Используем новое поле
+      size: selectedVariant.size,
+      price: basePrice,
+      quantity,
+      personalization: personalization ? { type: 'text', value: personalization, price: personalizationPrice } : undefined,
+      giftBox: addGiftBox,
+      giftBoxPrice,
     });
 
-    navigate('/cart'); // Переходим в корзину
+    alert('Товар добавлен в корзину!');
   };
 
-  if (isLoading) return <div className="container" style={{padding: '48px 0'}}>Загрузка…</div>;
-  if (isError || !product) return <div className="container" style={{padding: '48px 0'}}>Товар не найден</div>;
-
   return (
-    <div className="container" style={{ paddingTop: 32 }}>
+    <div className={`container ${styles.page}`}>
       <div className={styles.layout}>
-        {/* ЛЕВАЯ КОЛОНКА: ГАЛЕРЕЯ */}
+        {/* Левая часть: Галерея */}
         <div className={styles.galleryCol}>
-          <ProductGallery
-            images={product.images}
-            mobileImages={product.mobileImages}
-            alt={product.name}
-          />
+          <ProductGallery images={product.images} alt={product.name} />
         </div>
 
-        {/* ПРАВАЯ КОЛОНКА: ИНФО И ПОКУПКА */}
+        {/* Правая часть: Информация и опции */}
         <div className={styles.infoCol}>
           <h1 className={styles.title}>{product.name}</h1>
-          <p className={styles.short}>{product.shortDescription}</p>
+          <p className={styles.shortDesc}>{product.shortDescription}</p>
+          
+          <div className={styles.price}>{totalPrice} ₽</div>
 
-          <div className={styles.priceBlock}>
-            <span className={styles.price}>{priceData.total} ₽</span>
-            {product.isPreOrder && (
-              <span className={styles.preOrder}>Предзаказ · {product.productionDays} дн.</span>
-            )}
-          </div>
-
-          <div className={styles.divider} />
-
-          {/* ВЫБОР ЦВЕТА */}
-          <div className={styles.optionGroup}>
-            <span className={styles.optionLabel}>Цвет: <strong>{selectedColor}</strong></span>
-            <div className={styles.colors}>
-              {Array.from(new Set(product.variants.map(v => v.color))).map(color => (
-                <button
-                  key={color}
-                  className={selectedColor === color ? styles.colorActive : styles.colorBtn}
-                  onClick={() => setSelectedColor(color)}
-                >
-                  {color}
-                </button>
-              ))}
+          {product.isPreOrder && (
+            <div className={styles.preOrderBadge}>
+              Доступно по предзаказу · Срок изготовления: {product.productionDays} дн.
             </div>
-          </div>
+          )}
 
-          {/* ВЫБОР РАЗМЕРА (если есть) */}
-          {availableSizes.length > 0 && (
+          {/* ВЫБОР ЦВЕТА (Кружочки) */}
+          {product.variants.length > 0 && (
             <div className={styles.optionGroup}>
-              <span className={styles.optionLabel}>Размер</span>
-              <div className={styles.sizes}>
-                {availableSizes.map(size => (
-                  <button
-                    key={size}
-                    className={selectedSize === size ? styles.sizeActive : styles.sizeBtn}
-                    onClick={() => setSelectedSize(size)}
-                  >
-                    {size}
-                  </button>
-                ))}
+              <span className={styles.optionLabel}>Цвет: <strong>{selectedVariant?.colorName}</strong></span>
+              <div className={styles.colorPalette}>
+                {product.variants.map((v: any) => {
+                  const isSelected = selectedVariant?.sku === v.sku;
+                  return (
+                    <button
+                      key={v.sku}
+                      className={`${styles.colorSwatch} ${isSelected ? styles.colorSwatchActive : ''}`}
+                      style={{ backgroundColor: v.colorHex }}
+                      onClick={() => setSelectedVariant(v)}
+                      title={v.colorName}
+                    />
+                  );
+                })}
               </div>
             </div>
           )}
 
+          {/* ВЫБОР РАЗМЕРА (если есть) */}
+          {selectedVariant?.size && (
+             <div className={styles.optionGroup}>
+               <span className={styles.optionLabel}>Размер: <strong>{selectedVariant.size}</strong></span>
+             </div>
+          )}
+
           {/* ГРАВИРОВКА */}
-          {product.personalizationOptions.length > 0 && (
+          {product.personalizationOptions?.length > 0 && (
             <div className={styles.optionGroup}>
-              <label className={styles.checkbox}>
-                <input
-                  type="checkbox"
-                  checked={wantEngraving}
-                  onChange={(e) => setWantEngraving(e.target.checked)}
+              <label className={styles.checkboxLabel}>
+                <input 
+                  type="checkbox" 
+                  checked={!!personalization}
+                  onChange={(e) => setPersonalization(e.target.checked ? ' ' : '')}
                 />
-                Добавить гравировку (+{product.personalizationOptions[0]?.price} ₽)
+                Добавить гравировку (+{product.personalizationOptions[0].price} ₽)
               </label>
               
-              {wantEngraving && (
-                <input
-                  type="text"
+              {personalization !== '' && (
+                <input 
+                  type="text" 
+                  className={styles.personalizationInput}
                   placeholder="Введите текст для гравировки"
-                  value={engraving}
-                  onChange={(e) => setEngraving(e.target.value)}
-                  maxLength={product.personalizationOptions[0]?.maxLength || 20}
-                  className={styles.engravingInput}
+                  value={personalization.trim()}
+                  onChange={(e) => setPersonalization(e.target.value)}
+                  maxLength={product.personalizationOptions[0].maxLength || 20}
                 />
               )}
             </div>
@@ -189,33 +143,33 @@ export const ProductPage = () => {
           {/* ПОДАРОЧНАЯ КОРОБКА */}
           {product.giftBoxAvailable && (
             <div className={styles.optionGroup}>
-              <label className={styles.checkbox}>
-                <input
-                  type="checkbox"
-                  checked={wantGiftBox}
-                  onChange={(e) => setWantGiftBox(e.target.checked)}
+              <label className={styles.checkboxLabel}>
+                <input 
+                  type="checkbox" 
+                  checked={addGiftBox}
+                  onChange={(e) => setAddGiftBox(e.target.checked)}
                 />
-                Подарочная упаковка (+500 ₽)
+                Упаковать в подарочную коробку (+500 ₽)
               </label>
             </div>
           )}
 
-          {/* КНОПКА В КОРЗИНУ */}
-          <button 
-            onClick={handleAddToCart} 
-            className={styles.buyBtn}
-            disabled={!activeVariant || activeVariant.stock === 0}
-          >
-            {activeVariant?.stock === 0 ? 'Нет в наличии' : 'Добавить в корзину'}
-          </button>
+          {/* КОЛИЧЕСТВО И КНОПКА */}
+          <div className={styles.actions}>
+            <div className={styles.quantity}>
+              <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>−</button>
+              <span>{quantity}</span>
+              <button onClick={() => setQuantity(quantity + 1)}>+</button>
+            </div>
+            
+            <button className={styles.addToCartBtn} onClick={handleAddToCart}>
+              Добавить в корзину
+            </button>
+          </div>
 
-          {/* ХАРАКТЕРИСТИКИ */}
-          <div className={styles.specs}>
-            <h4>Характеристики</h4>
+          <div className={styles.meta}>
             <p><strong>Материал:</strong> {product.material}</p>
-            {product.careInstructions && (
-              <p><strong>Уход:</strong> {product.careInstructions}</p>
-            )}
+            {product.careInstructions && <p><strong>Уход:</strong> {product.careInstructions}</p>}
           </div>
         </div>
       </div>

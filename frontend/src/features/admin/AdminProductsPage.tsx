@@ -115,7 +115,7 @@ export const AdminProductsPage = () => {
                 <td>
                   {CATEGORY_LABELS[product.subCategory] || product.subCategory}
                 </td>
-                <td>{product.basePrice} ₽</td>
+                <td>{product.basePrice} BYN</td>
                 <td>
                   {product.isActive ? (
                     <span className={styles.statusActive}>Активен</span>

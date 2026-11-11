@@ -11,7 +11,8 @@ export type SubCategory =
   | 'none';
 
 export interface Variant {
-  color: string;
+  colorName: string;
+  colorHex: string;
   size?: string;
   sku: string;
   stock: number;
